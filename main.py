@@ -13,7 +13,7 @@ scaler.fit(dataset_nutrisi)
 dataset_nutrisi_scaled = scaler.fit_transform(dataset_nutrisi)
 
 application = FastAPI()
-model = load_model('./model_rekomendasi.h5')
+model = load_model('./model_rekomendasi_v2.h5')
 
 @application.get('/')
 def dietica():
@@ -31,6 +31,6 @@ def food_recommendation(cal:int, fat:int,sat:int, chol:int, sodium:int, carbo:in
                  'SodiumContent', 'CarbohydrateContent', 'FiberContent',
                  'SugarContent', 'ProteinContent', 'RecipeServings', 'RecipeInstructions']
     recommendations = extracted_data.iloc[top_resep][kolom_pilihan]
-    rekomendasi = recommendations.head()
+    rekomendasi = recommendations.head(10)
     return rekomendasi
 
