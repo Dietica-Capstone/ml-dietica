@@ -1,0 +1,5 @@
+fastapi==0.115.4
+tensorflow==2.18.0
+scikit-learn==1.5.1
+numpy==1.26.4
+pandas==2.2.2
