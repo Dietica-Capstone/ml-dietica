@@ -6,17 +6,60 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import euclidean_distances
 import numpy as np
 import pandas as pd
+import gdown
+import os
+
+# Fungsi untuk mengunduh model dari Google Drive
+def download_model_from_drive(file_id, output_path):
+    if not os.path.exists(output_path):  # Hanya unduh jika file belum ada
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, output_path, quiet=False)
+
+# File ID dari Google Drive
+file_id_model_v2 = "16ucJ2a-D4ZDU53sYlRk3oX2aQbLlmhd0"
+file_id_model_kalori = "1rgoCbogr13zpdLP2ZS1ThsRCFVp0KhMi"
+
+# Path lokal untuk menyimpan model
+local_model_v2 = "./model_rekomendasi_v2.h5"
+local_model_kalori = "./model_rekomendasi_kalori.h5"
+
+# Unduh model dari Google Drive
+download_model_from_drive(file_id_model_v2, local_model_v2)
+download_model_from_drive(file_id_model_kalori, local_model_kalori)
+
+def download_dataset_from_drive(file_id, output_path):
+    if not os.path.exists(output_path):  # Hanya unduh jika file belum ada
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, output_path, quiet=False)
+
+# File ID dataset dari Google Drive
+file_id_dataset_nutrisi = "1fqeY81Fl_CE3dBKsN4DtV36tyaauBfkf"
+file_id_extracted_data = "1gGTRLrr4-hrnAJO4EjZRrnSXSkNWFpNP"
+
+# Path lokal untuk menyimpan dataset
+local_dataset_nutrisi = "./dataset_nutrisi.csv"
+local_extracted_data = "./extracted_data.csv"
+
+# Unduh dataset dari Google Drive
+download_dataset_from_drive(file_id_dataset_nutrisi, local_dataset_nutrisi)
+download_dataset_from_drive(file_id_extracted_data, local_extracted_data)
+
+# Load dataset setelah diunduh
+dataset_nutrisi = pd.read_csv(local_dataset_nutrisi)
+extracted_data = pd.read_csv(local_extracted_data)
 
 # Load dataset dan model
-dataset_nutrisi = pd.read_csv('./dataset_nutrisi.csv')
-extracted_data = pd.read_csv('./extracted_data.csv')
+# dataset_nutrisi = pd.read_csv('./dataset_nutrisi.csv')
+# extracted_data = pd.read_csv('./extracted_data.csv')
 
 scaler = MinMaxScaler()
 scaler.fit(dataset_nutrisi)
 dataset_nutrisi_scaled = scaler.fit_transform(dataset_nutrisi)
 
-model = load_model('./model_rekomendasi_v2.h5')
-model_kalori = load_model('./model_rekomendasi_kalori.h5')
+# model = load_model('./model_rekomendasi_v2.h5')
+# model_kalori = load_model('./model_rekomendasi_kalori.h5')
+model = load_model(local_model_v2)
+model_kalori = load_model(local_model_kalori)
 predicted_latent_feature = model.predict(dataset_nutrisi_scaled)
 
 # Inisialisasi FastAPI
