@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 import gdown
 import os
+import uvicorn
+from os import getenv
 
 # Fungsi untuk mengunduh model dari Google Drive
 def download_model_from_drive(file_id, output_path):
@@ -152,3 +154,7 @@ def get_recipe():
     data_resep = getrecipe.to_dict(orient="records")
 
     return {"message": "Get success!", "status": 200, "data": data_resep}
+
+if __name__ == '__main__':
+    port = int(getenv("PORT", 8000))
+    uvicorn.run("app.main:application", host='0.0.0.0', port=port, reload=True)
